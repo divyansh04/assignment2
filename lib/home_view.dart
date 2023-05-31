@@ -1,5 +1,7 @@
+import 'package:assignment_2/home_controller.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'service/local_notification_service.dart';
 
@@ -11,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final controller = Get.put(HomeController());
+
   @override
   void initState() {
     super.initState();
@@ -53,18 +57,44 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        backgroundColor: Colors.blue[900],
+        title: const Text('Form'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: controller.nameController,
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+              ),
             ),
-            Text(
-              'counter',
-              style: Theme.of(context).textTheme.headline4,
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: controller.emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed:
+                  controller.isLoading.value ? null : controller.submitForm,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue[900],
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+              child: Obx(
+                () => controller.isLoading.value
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : const Text('Submit'),
+              ),
             ),
           ],
         ),
